@@ -7,9 +7,8 @@
 
 #include "targetver.h"
 
-
-#include "json.hpp"
-#include "xxhash.hpp"
+#include <json.hpp>
+#include <xxhash.hpp>
 
 // CURL
 #include <curl/curl.h>
