@@ -16,6 +16,9 @@ find_package(CURL REQUIRED)
 target_link_libraries(Raven_CppClient PRIVATE ${CURL_LIBRARIES})
 target_include_directories(Raven_CppClient PRIVATE ${CURL_INCLUDE_DIRS})
 
+ find_package(OpenSSL REQUIRED)
+target_link_libraries(Raven_CppClient PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+
 target_include_directories(Raven_CppClient PUBLIC . .. ../external)
 
 target_compile_definitions(Raven_CppClient PUBLIC DEFAULT_CA_BUNDLE_PATH="../../ca_bundle/ca-bundle.crt")

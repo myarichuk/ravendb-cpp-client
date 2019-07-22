@@ -1,22 +1,19 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.13)
 project(raven_cpp_client)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
-endif(MSVC)
-
 #library names for vcpkg to install
-set(PROJECT_DEPENDENCIES xxhash curl nlohmann-json)
+set(PROJECT_DEPENDENCIES xxhash curl nlohmann-json openssl)
 
-if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-  MESSAGE("++ 64 bit architecture") 
-  #set(LIBSUFFIX "64") 
-  set(ARCH "x64") 
- else() 
-  MESSAGE("++ 32 bit architecture") 
-  set(ARCH "x86") 
+if(NOT DEFINED ARCH)
+	if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+	  MESSAGE("++ 64 bit architecture") 
+	  set(ARCH "x64") 
+	 else() 
+	  MESSAGE("++ 32 bit architecture") 
+	  set(ARCH "x86") 
+	endif()
 endif()
 
 if(WIN32)
@@ -108,26 +105,26 @@ add_subdirectory(Raven.CppClient)
 #choose if buildings tryouts
 option(BUILD_TRYOUTS "Build the Tryouts" OFF)
 if(BUILD_TRYOUTS)
-    add_subdirectory(Tryouts)
+	add_subdirectory(Tryouts)
 endif()
 
 #choose if building tests
 option(BUILD_TESTS "Build the Tests" OFF)
 if(BUILD_TESTS)
-    add_subdirectory(Raven.CppClient.Tests)
+	add_subdirectory(Raven.CppClient.Tests)
 endif()
 
 #set user home directory for installation
 if(WINN32)
-    set(USER_HOME_DIRECTORY $ENV{HOMEPATH})
+	set(USER_HOME_DIRECTORY $ENV{HOMEPATH})
 endif()
 if(UNIX)
-    set(USER_HOME_DIRECTORY $ENV{HOME})
+	set(USER_HOME_DIRECTORY $ENV{HOME})
 endif()
 
 
 if(CMAKE_INSTALL_PREFIX EQUAL "")
-    set(CMAKE_INSTALL_PREFIX ${USER_HOME_DIRECTORY}/RavenDBCppClient CACHE PATH "destination directory" FORCE)
+	set(CMAKE_INSTALL_PREFIX ${USER_HOME_DIRECTORY}/RavenDBCppClient CACHE PATH "destination directory" FORCE)
 endif()
 
 FILE(GLOB include_files Raven.CppClient/*.h)
