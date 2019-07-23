@@ -6,19 +6,37 @@ set(CMAKE_CXX_STANDARD 17)
 FILE(GLOB RAVEN_HEADERS ./*.h)
 FILE(GLOB RAVEN_CPPS ./*.cpp)
 
-add_library(Raven_CppClient SHARED ${RAVEN_HEADERS} ${RAVEN_CPPS})
-
-
+find_package(ZLIB REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-target_link_libraries(Raven_CppClient PRIVATE nlohmann_json nlohmann_json::nlohmann_json)
+find_package(OpenSSL REQUIRED)
 
 find_package(CURL REQUIRED)
-target_link_libraries(Raven_CppClient PRIVATE ${CURL_LIBRARIES})
-target_include_directories(Raven_CppClient PRIVATE ${CURL_INCLUDE_DIRS})
 
- find_package(OpenSSL REQUIRED)
-target_link_libraries(Raven_CppClient PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+add_library(Raven_CppClient SHARED ${RAVEN_HEADERS} ${RAVEN_CPPS})
+
+target_link_libraries(Raven_CppClient ZLIB::ZLIB)
+target_link_libraries(Raven_CppClient nlohmann_json nlohmann_json::nlohmann_json)
+ 
+ if(NOT ${CURL_LIBRARIES} STREQUAL "")
+	message("Found Curl libaries at ${CURL_LIBRARIES}")
+ endif()
+
+ if(NOT ${CURL_INCLUDE_DIRS} STREQUAL "")
+	message("Found Curl includes at ${CURL_INCLUDE_DIRS}")
+endif()
+
+target_link_libraries(Raven_CppClient ${CURL_LIBRARIES})
+include_directories(${CURL_INCLUDE_DIRS})
+
+if(WIN32)
+	target_link_libraries(Raven_CppClient "Ws2_32.lib")
+	target_link_libraries(Raven_CppClient "Wldap32.lib")
+	target_link_libraries(Raven_CppClient "Crypt32.lib")
+	target_link_libraries(Raven_CppClient "${CMAKE_LIBRARY_PATH}/libcurl.lib")
+endif()
+
+target_link_libraries(Raven_CppClient OpenSSL::SSL OpenSSL::Crypto)
 
 target_include_directories(Raven_CppClient PUBLIC . .. ../external)
-
+ 
 target_compile_definitions(Raven_CppClient PUBLIC DEFAULT_CA_BUNDLE_PATH="../../ca_bundle/ca-bundle.crt")

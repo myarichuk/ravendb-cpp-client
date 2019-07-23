@@ -38,7 +38,15 @@
 #include <memory>
 #include <string>
 
+//#ifdef __linux__ 
+//	//linux link references
+//#elif _WIN32
+//	#pragma comment(lib, "WS2_32.lib")
+//	#pragma comment(lib, "Crypt32.Lib")
+//	#pragma comment(lib, "Wldap32.Lib")
+//#else
+////arm32/64 link references
+//#endif
 
-//USER
 
 

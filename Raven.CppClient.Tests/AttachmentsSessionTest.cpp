@@ -204,7 +204,6 @@ namespace ravendb::client::tests::client::attachments
 			auto& metadata = *session.advanced().get_metadata_for(user);
 
 			ASSERT_EQ("HasAttachments", metadata.get_as<std::string>(constants::documents::metadata::FLAGS));
-
 			auto& attachments = metadata.get_as_array(constants::documents::metadata::ATTACHMENTS);
 
 			ASSERT_EQ(2, attachments.size());
