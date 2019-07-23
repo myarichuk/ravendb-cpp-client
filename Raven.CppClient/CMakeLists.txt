@@ -6,13 +6,18 @@ set(CMAKE_CXX_STANDARD 17)
 FILE(GLOB RAVEN_HEADERS ./*.h)
 FILE(GLOB RAVEN_CPPS ./*.cpp)
 
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS
+	  "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:library")
+endif()
+
 find_package(ZLIB REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 find_package(CURL REQUIRED)
 
-add_library(Raven_CppClient SHARED ${RAVEN_HEADERS} ${RAVEN_CPPS})
+add_library(Raven_CppClient ${RAVEN_HEADERS} ${RAVEN_CPPS})
 
 target_link_libraries(Raven_CppClient ZLIB::ZLIB)
 target_link_libraries(Raven_CppClient nlohmann_json nlohmann_json::nlohmann_json)
@@ -32,7 +37,7 @@ if(WIN32)
 	target_link_libraries(Raven_CppClient "Ws2_32.lib")
 	target_link_libraries(Raven_CppClient "Wldap32.lib")
 	target_link_libraries(Raven_CppClient "Crypt32.lib")
-	target_link_libraries(Raven_CppClient "${CMAKE_LIBRARY_PATH}/libcurl.lib")
+	#target_link_libraries(Raven_CppClient "${CMAKE_LIBRARY_PATH}/libcurl.lib")
 endif()
 
 target_link_libraries(Raven_CppClient OpenSSL::SSL OpenSSL::Crypto)

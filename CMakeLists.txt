@@ -4,22 +4,22 @@ project(raven_cpp_client)
 set(CMAKE_CXX_STANDARD 17)
 
 #library names for vcpkg to install
-set(PROJECT_DEPENDENCIES xxhash curl nlohmann-json openssl gtest zlib)
+set(PROJECT_DEPENDENCIES xxhash curl nlohmann-json openssl gtest gtest-main  zlib pthreads)
 
 if(NOT DEFINED ARCH)
 	if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-	  MESSAGE("++ 64 bit architecture") 
+	  MESSAGE("+ 64 bit architecture") 
 	  set(ARCH "x64") 
 	 else() 
-	  MESSAGE("++ 32 bit architecture") 
+	  MESSAGE("+ 32 bit architecture") 
 	  set(ARCH "x86") 
 	endif()
 endif() 
-  
+
 if(WIN32)
 #this is most likely due to a bug in vcpkg configuration, we need to set these manually...
-	set(VCPKG_TARGET_TRIPLET "${ARCH}-windows-static")
-	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+	set(VCPKG_TARGET_TRIPLET "${ARCH}-windows")
+	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/win")
 	include(FindWindowsSDK)
 
 	if(WINDOWSSDK_FOUND)
@@ -34,9 +34,9 @@ if(WIN32)
 		message(FATAL_ERROR "Couldn't find Windows SDK folder, cannot compile RavenDB C++ Client without it.")
 	endif()
 elseif(UNIX)
-	set(VCPKG_TARGET_TRIPLET "${ARCH}-linux-static")
+	set(VCPKG_TARGET_TRIPLET "${ARCH}-linux")
 elseif(APPLE)
-	set(VCPKG_TARGET_TRIPLET "${ARCH}-osx-static")
+	set(VCPKG_TARGET_TRIPLET "${ARCH}-osx")
 else()
 #TODO: add arm triplets too, test the builds on arm dockers
 	message(FATAL_ERROR "Can compile only on Unix, Windows or MacOS operating systems.")
@@ -108,9 +108,10 @@ message("Share path: ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/share")
 message("Include path: ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include")
 message("Lib path: ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/lib")
   
-set(CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/share")
-set(CMAKE_INCLUDE_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include")
-set(CMAKE_LIBRARY_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/lib")
+list (APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/share")
+list (APPEND CMAKE_INCLUDE_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include")
+list (APPEND CMAKE_LIBRARY_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/lib")
+list (APPEND CMAKE_LIBRARY_PATH "${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/lib/manual-link")
 
 enable_testing() 
 
@@ -123,7 +124,7 @@ if(BUILD_TRYOUTS)
 endif()
   
 #choose if building tests
-option(BUILD_TESTS "Build the Tests" OFF)
+option(BUILD_TESTS "Build the Tests" ON)
 if(BUILD_TESTS)
 	add_subdirectory(Raven.CppClient.Tests)
 endif()
@@ -136,11 +137,10 @@ if(UNIX)
 	set(USER_HOME_DIRECTORY $ENV{HOME})
 endif()
  
- 
 if(CMAKE_INSTALL_PREFIX EQUAL "")
 	set(CMAKE_INSTALL_PREFIX ${USER_HOME_DIRECTORY}/RavenDBCppClient CACHE PATH "destination directory" FORCE)
 endif()
- 
+  
 FILE(GLOB include_files Raven.CppClient/*.h)
 FILE(GLOB external_include_files external/*)
 FILE(GLOB ca_bundle_files ca_bundle/*)
@@ -148,8 +148,8 @@ FILE(GLOB ca_bundle_files ca_bundle/*)
 FILE(GLOB HELLO_WORLD_APP ./hello_world.cpp)
 
 install(TARGETS Raven_CppClient LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-#install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-#install(FILES ${external_include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/external)
+install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(FILES ${external_include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/external)
 install(FILES ${ca_bundle_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/ca_bundle)
 
 install(FILES ${HELLO_WORLD_APP} DESTINATION ${CMAKE_INSTALL_PREFIX}/)
