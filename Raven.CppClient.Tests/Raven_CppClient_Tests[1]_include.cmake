@@ -1,0 +1,5 @@
+if(EXISTS "C:/Work/ravendb-cpp-client/Raven.CppClient.Tests/Raven_CppClient_Tests[1]_tests.cmake")
+  include("C:/Work/ravendb-cpp-client/Raven.CppClient.Tests/Raven_CppClient_Tests[1]_tests.cmake")
+else()
+  add_test(Raven_CppClient_Tests_NOT_BUILT Raven_CppClient_Tests_NOT_BUILT)
+endif()
