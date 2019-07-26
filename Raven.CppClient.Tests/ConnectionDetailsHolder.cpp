@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "ConnectionDetailsHolder.h"
 #include <fstream>
+#include <string>
 
 namespace ravendb::client::tests::infrastructure
 {
 	ConnectionDetailsHolder::~ConnectionDetailsHolder() = default;
 
 	ConnectionDetailsHolder::ConnectionDetailsHolder(const std::string& def_file_name, bool has_certificate = true)
-	{
+	{ 
 		//open definitions file
 		std::ifstream def_file(def_file_name);
 		if (!def_file)
@@ -25,10 +26,14 @@ namespace ravendb::client::tests::infrastructure
 		}
 		//get certificate
 		std::string cert_file_name;
-		if (!std::getline(def_file, cert_file_name) || cert_file_name.empty())
-		{
-			throw std::runtime_error(std::string("Can't read certificate file name from ") + def_file_name);
+		while (!def_file.eof() && cert_file_name.empty())
+		{			
+			std::getline(def_file, cert_file_name);
 		}
+
+		if(cert_file_name.empty())
+			throw std::runtime_error(std::string("Can't read certificate file name from ") + def_file_name);
+
 		std::ifstream cert_file(cert_file_name);
 		if (!cert_file)
 		{

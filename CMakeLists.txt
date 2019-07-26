@@ -18,29 +18,15 @@ if(NOT DEFINED ARCH)
 	  set(ARCH "x86") 
 	endif()
 endif() 
-
+ 
 if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
-
+ 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 if(WIN32)
 #this is most likely due to a bug in vcpkg configuration, we need to set these manually...
-	set(VCPKG_TARGET_TRIPLET "${ARCH}-windows-static")
-	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/win")
-	include(FindWindowsSDK)
-
-	if(WINDOWSSDK_FOUND)
-		foreach(_sdk ${WINDOWSSDK_DIRS})
-			get_windowssdk_library_dirs("${_sdk}" _dirs)	
-			message(STATUS "WinSDK libs: ${_dirs}")
-			foreach(_dir ${_dirs})
-				#link_directories(${_dir})
-			endforeach()
-		endforeach()		
-	else()
-		message(FATAL_ERROR "Couldn't find Windows SDK folder, cannot compile RavenDB C++ Client without it.")
-	endif()
+	set(VCPKG_TARGET_TRIPLET "${ARCH}-windows-static")	
 elseif(UNIX)
 	set(VCPKG_TARGET_TRIPLET "${ARCH}-linux-static")
 elseif(APPLE)
@@ -111,7 +97,7 @@ if(NOT DEFINED ${CMAKE_TOOLCHAIN_FILE})
   #actually install vcpkg libraries
   execute_process(COMMAND ${VCPKG_EXEC} install --triplet ${VCPKG_TARGET_TRIPLET} ${PROJECT_DEPENDENCIES} WORKING_DIRECTORY ${VCPKG_ROOT})
 endif()
-
+ 
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	message("++ This is a Debug build")
 	set (CMAKE_CONFIGURATION_TYPES, "Debug")

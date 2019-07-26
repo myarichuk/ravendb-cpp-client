@@ -27,11 +27,10 @@ set_property(TARGET Raven_CppClient PROPERTY POSITION_INDEPENDENT_CODE 1)
 add_library(Raven_CppClient_shared SHARED $<TARGET_OBJECTS:Raven_CppClient>)
 add_library(Raven_CppClient_static STATIC $<TARGET_OBJECTS:Raven_CppClient>)
 
-target_link_libraries(Raven_CppClient_shared ZLIB::ZLIB)
-target_link_libraries(Raven_CppClient_static ZLIB::ZLIB)
-target_link_libraries(Raven_CppClient_shared nlohmann_json nlohmann_json::nlohmann_json)
-target_link_libraries(Raven_CppClient_static nlohmann_json nlohmann_json::nlohmann_json)
- 
+target_link_libraries(Raven_CppClient ZLIB::ZLIB nlohmann_json nlohmann_json::nlohmann_json)
+target_link_libraries(Raven_CppClient_shared PUBLIC Raven_CppClient)
+target_link_libraries(Raven_CppClient_static PUBLIC Raven_CppClient)
+
  if(NOT CURL_LIBRARIES STREQUAL "")
 	message("Found Curl libaries at ${CURL_LIBRARIES}")
  endif()
@@ -40,25 +39,16 @@ target_link_libraries(Raven_CppClient_static nlohmann_json nlohmann_json::nlohma
 	message("Found Curl includes at ${CURL_INCLUDE_DIRS}")
 endif()
 
-target_link_libraries(Raven_CppClient_static ${CURL_LIBRARIES})
-target_link_libraries(Raven_CppClient_shared ${CURL_LIBRARIES})
 include_directories(${CURL_INCLUDE_DIRS})
 
 if(WIN32)
-	target_link_libraries(Raven_CppClient_shared "Ws2_32.lib")
-	target_link_libraries(Raven_CppClient_shared "Wldap32.lib")
-	target_link_libraries(Raven_CppClient_shared "Crypt32.lib")
-
-	target_link_libraries(Raven_CppClient_static "Ws2_32.lib")
-	target_link_libraries(Raven_CppClient_static "Wldap32.lib")
-	target_link_libraries(Raven_CppClient_static "Crypt32.lib")
+	target_link_libraries(Raven_CppClient "Ws2_32.lib")
+	target_link_libraries(Raven_CppClient "Wldap32.lib")
+	target_link_libraries(Raven_CppClient "Crypt32.lib")
 endif()
 
-target_link_libraries(Raven_CppClient_shared OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(Raven_CppClient OpenSSL::SSL OpenSSL::Crypto  ${CURL_LIBRARIES})
 include_directories(. .. ../external)
 
-target_link_libraries(Raven_CppClient_shared OpenSSL::SSL OpenSSL::Crypto)
-target_include_directories(Raven_CppClient_static PUBLIC . .. ../external)
- 
 target_compile_definitions(Raven_CppClient_shared PUBLIC DEFAULT_CA_BUNDLE_PATH="../../ca_bundle/ca-bundle.crt")
 target_compile_definitions(Raven_CppClient_static PUBLIC DEFAULT_CA_BUNDLE_PATH="../../ca_bundle/ca-bundle.crt")

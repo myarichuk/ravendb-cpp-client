@@ -379,8 +379,6 @@ _deps
 
 #cmake-build-debug/*
 #cmake-build-release/*
-/linux_re_config
-/win_re_config
 /out
 /Raven.CppClient/CMakeFiles
 /Raven.CppClient.Tests/CMakeFiles
