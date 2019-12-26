@@ -7,10 +7,12 @@
 
 #include "targetver.h"
 
-#include "json.hpp"
+#ifdef _MSC_VER
+	#include <intrin.h>
+#endif
+
+#include <nlohmann/json.hpp>
 #include "xxhash.hpp"
-
-
 
 // CURL
 #include <curl/curl.h>
@@ -39,5 +41,4 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-
 

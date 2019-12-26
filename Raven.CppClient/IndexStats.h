@@ -5,7 +5,7 @@
 #include "IndexLockMode.h"
 #include "IndexType.h"
 #include "IndexRunningStatus.h"
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 namespace ravendb::client::documents::indexes
 {

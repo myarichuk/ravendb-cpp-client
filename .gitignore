@@ -382,3 +382,4 @@ External/
 external/
 *.crt
 *.key
+/Raven.CppClient.Tests/Testing/Temporary

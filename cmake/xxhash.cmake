@@ -13,7 +13,4 @@ FetchContent_GetProperties(xxhash_cpp)
 if(NOT xxhash_cpp_POPULATED)  
   FetchContent_Populate(xxhash_cpp)
 endif()
-  
-message(STATUS "xxhash_cpp include dir: ${xxhash_cpp_SOURCE_DIR}/xxhash")
-
-list(APPEND CMAKE_INCLUDE_PATH "${xxhash_cpp_SOURCE_DIR}/xxhash")
+ 

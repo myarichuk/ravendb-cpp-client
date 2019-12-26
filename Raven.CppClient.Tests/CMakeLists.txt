@@ -28,20 +28,17 @@ else()
 	file(COPY "${PROJECT_SOURCE_DIR}/linux_re_config/unsecured_re.txt" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/")
 endif()
 
+find_package(ZLIB CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(xxhash CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(CURL REQUIRED)
+find_package(CURL CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
 message("CLIENT_DIR: ${CLIENT_DIR}")
 
-target_include_directories(Raven_CppClient_Tests PRIVATE	
-	${CLIENT_DIR}
-	${ROOT_INCLUDE_PATH}/nlohmann
-    ${CMAKE_INCLUDE_PATH}
-    ${gtest_SOURCE_DIR}/include 
-    ${gtest_SOURCE_DIR} 
-    ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Raven_CppClient_Tests PRIVATE ${CLIENT_DIR})
 
 target_link_libraries(Raven_CppClient_Tests PRIVATE 
     GTest::gtest 
