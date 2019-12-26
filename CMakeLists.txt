@@ -59,7 +59,7 @@ if(BUILD_TRYOUTS)
 endif()
 
 #choose if building tests
-option(BUILD_TESTS "Build the Tests" ON)
+option(BUILD_TESTS "Build the Tests" OFF)
 if(BUILD_TESTS)
 	enable_testing()
 	if(WIN32)
@@ -73,29 +73,12 @@ if(BUILD_TESTS)
     add_subdirectory(Raven.CppClient.Tests)
 endif()
 
-#[[
-#set user home directory for installation
-if(WINN32)
-    set(USER_HOME_DIRECTORY $ENV{HOMEPATH})
-endif()
-if(UNIX)
-    set(USER_HOME_DIRECTORY $ENV{HOME})
-endif()
 
+FILE(GLOB include_files Raven.CppClient/*.h)
+FILE(GLOB ca_bundle_files ca_bundle/*)
 
-if(CMAKE_INSTALL_PREFIX EQUAL "")
-    set(CMAKE_INSTALL_PREFIX ${USER_HOME_DIRECTORY}/RavenDBCppClient CACHE PATH "destination directory" FORCE)
-endif()
+install(TARGETS Raven_CppClient LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(FILES ${ca_bundle_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/ca_bundle)
 
-#FILE(GLOB include_files Raven.CppClient/*.h)
-#FILE(GLOB external_include_files external/*)
-#FILE(GLOB ca_bundle_files ca_bundle/*)
-
-#FILE(GLOB HELLO_WORLD_APP ./hello_world.cpp)
-
-#install(TARGETS Raven_CppClient LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-#install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-#install(FILES ${external_include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/external)
-#install(FILES ${ca_bundle_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/ca_bundle)
-#install(FILES ${HELLO_WORLD_APP} DESTINATION ${CMAKE_INSTALL_PREFIX}/)
-]]
+export(TARGETS Raven_CppClient NAMESPACE RavenDB:: FILE ${CMAKE_INSTALL_PREFIX}/Raven_CppClient.cmake)
