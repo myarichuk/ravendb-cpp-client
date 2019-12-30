@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 include("cmake/HunterGate.cmake")
+
+set(TESTING_CONFIG_OPT FILEPATH cmake/config.cmake)
+
 HunterGate(
     URL "https://github.com/cpp-pm/hunter/archive/v0.23.240.tar.gz"
     SHA1 "ca19f3769e6c80cfdd19d8b12ba5102c27b074e0"
@@ -28,6 +31,7 @@ target_link_libraries(boo PRIVATE ZLIB::zlib)
 ]]
 
 hunter_add_package(OpenSSL)
+
 #[[
 find_package(OpenSSL REQUIRED)
 target_link_libraries(foo PUBLIC OpenSSL::SSL OpenSSL::Crypto)

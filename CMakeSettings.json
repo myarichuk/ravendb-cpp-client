@@ -10,7 +10,23 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "variables": []
+      "variables": [
+        {
+          "name": "BUILD_TESTING",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "FETCHCONTENT_QUIET",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "HUNTER_STATUS_DEBUG",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x64-Release",

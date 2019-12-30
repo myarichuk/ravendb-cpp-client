@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 99)
 
 FILE(GLOB_RECURSE RAVEN_HEADERS FOLLOW_SYMLINKS *.h)
 FILE(GLOB_RECURSE RAVEN_CPPS FOLLOW_SYMLINKS *.cpp)
@@ -27,6 +28,8 @@ else()
 add_library(Raven_CppClient STATIC ${LibSources})
 endif()
  
+
+add_dependencies(Raven_CppClient OpenSSL ZLIB nlohmann_json xxhash CURL)
 
 set_target_properties(Raven_CppClient PROPERTIES OUTPUT_NAME Raven.CppClient) 
  
