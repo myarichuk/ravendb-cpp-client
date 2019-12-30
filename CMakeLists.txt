@@ -15,6 +15,13 @@ include(CTest)
 set(CMAKE_CXX_STANDARD 17)
 include(cmake/xxhash.cmake)
 include_directories(${xxhash_cpp_SOURCE_DIR}/xxhash)
+ 
+hunter_add_package(OpenSSL)
+
+#[[
+find_package(OpenSSL REQUIRED)
+target_link_libraries(foo PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+]]
 
 hunter_add_package(CURL)
 #[[
@@ -28,13 +35,6 @@ find_package(ZLIB CONFIG REQUIRED)
 
 add_executable(boo main.c)
 target_link_libraries(boo PRIVATE ZLIB::zlib)
-]]
-
-hunter_add_package(OpenSSL)
-
-#[[
-find_package(OpenSSL REQUIRED)
-target_link_libraries(foo PUBLIC OpenSSL::SSL OpenSSL::Crypto)
 ]]
 
 hunter_add_package(nlohmann_json)
@@ -77,7 +77,7 @@ if(BUILD_TESTS)
     add_subdirectory(Raven.CppClient.Tests)
 endif()
 
-#[[
+
 FILE(GLOB include_files Raven.CppClient/*.h)
 FILE(GLOB ca_bundle_files ca_bundle/*)
 
@@ -87,4 +87,3 @@ install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 install(FILES ${ca_bundle_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/ca_bundle)
 
 export(TARGETS Raven_CppClient NAMESPACE RavenDB:: FILE ${CMAKE_INSTALL_PREFIX}/Raven_CppClient.cmake)
-]]
