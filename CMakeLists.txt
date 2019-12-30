@@ -77,12 +77,14 @@ if(BUILD_TESTS)
     add_subdirectory(Raven.CppClient.Tests)
 endif()
 
-
+#[[
 FILE(GLOB include_files Raven.CppClient/*.h)
 FILE(GLOB ca_bundle_files ca_bundle/*)
 
+install(TARGETS Raven_CppClient ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(TARGETS Raven_CppClient LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${include_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 install(FILES ${ca_bundle_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/ca_bundle)
 
 export(TARGETS Raven_CppClient NAMESPACE RavenDB:: FILE ${CMAKE_INSTALL_PREFIX}/Raven_CppClient.cmake)
+]]
