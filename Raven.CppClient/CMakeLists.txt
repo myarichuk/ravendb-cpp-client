@@ -32,7 +32,9 @@ endif()
 add_dependencies(Raven_CppClient OpenSSL::SSL OpenSSL::Crypto ZLIB::zlib nlohmann_json::nlohmann_json CURL::libcurl)
 
 set_target_properties(Raven_CppClient PROPERTIES OUTPUT_NAME Raven.CppClient) 
- 
+message("RavenDB client public headers: ${RAVEN_HEADERS}")
+set_target_properties(Raven_CppClient PROPERTIES PUBLIC_HEADER "${RAVEN_HEADERS}")
+
 if(WIN32)
 	target_link_libraries(Raven_CppClient PUBLIC ZLIB::zlib nlohmann_json nlohmann_json::nlohmann_json CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
 else()
@@ -40,3 +42,4 @@ else()
 endif()
 
 target_compile_definitions(Raven_CppClient PUBLIC DEFAULT_CA_BUNDLE_PATH="../../ca_bundle/ca-bundle.crt")
+export(TARGETS Raven_CppClient NAMESPACE RavenDB:: FILE ${CMAKE_INSTALL_PREFIX}/Raven_CppClient.cmake)
